@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessageRequest {
-    String nickname;
+public class MessagePUTRequest {
     String text;
 }

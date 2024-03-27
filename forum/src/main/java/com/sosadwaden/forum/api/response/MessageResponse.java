@@ -3,8 +3,6 @@ package com.sosadwaden.forum.api.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @AllArgsConstructor

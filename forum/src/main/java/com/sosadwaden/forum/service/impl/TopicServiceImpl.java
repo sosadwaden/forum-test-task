@@ -1,5 +1,6 @@
 package com.sosadwaden.forum.service.impl;
 
+import com.sosadwaden.forum.api.request.MessageRequest;
 import com.sosadwaden.forum.api.request.TopicRequest;
 import com.sosadwaden.forum.api.response.MessageResponse;
 import com.sosadwaden.forum.api.response.TopicResponse;
@@ -14,7 +15,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,23 +36,7 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public List<MessageResponse> findMessages(Long id) {
-        Optional<Topic> topicEntity = topicRepository.findById(id);
-        if (topicEntity.isPresent()) {
-            List<Message> messagesInTopic = topicEntity.get().getMessages();
-            return messagesInTopic.stream()
-                    .map(this::convertToMessageResponse)
-                    .collect(Collectors.toList());
-
-        }
-        throw TopicNotFoundException.builder()
-                .message("There is no topic with this id")
-                .build();
-
-    }
-
-    @Override
-    public Long create(TopicRequest topicRequest) {
+    public Long createTopic(TopicRequest topicRequest) {
         // TODO придумать способ проверки что приходит в JSON именно topicName чтобы не создавался topic с name = null
         Message defaultMessage = Message.builder()
                 .nickname("Admin")
@@ -64,8 +48,6 @@ public class TopicServiceImpl implements TopicService {
                 .name(topicRequest.getTopicName())
                 .build();
 
-        System.out.println(topicRequest.getTopicName());
-
         topic.addMessage(defaultMessage);
         Long topicId = topicRepository.save(topic).getId();
         return topicId;
@@ -75,7 +57,4 @@ public class TopicServiceImpl implements TopicService {
         return modelMapper.map(topic, TopicResponse.class);
     }
 
-    private MessageResponse convertToMessageResponse(Message message) {
-        return modelMapper.map(message, MessageResponse.class);
-    }
 }

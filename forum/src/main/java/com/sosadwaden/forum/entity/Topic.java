@@ -32,4 +32,9 @@ public class Topic {
         messages.add(message);
         message.setTopic(this);
     }
+
+    public void removeMessage(Message message) {
+        messages.remove(message);
+        message.setTopic(null);
+    }
 }

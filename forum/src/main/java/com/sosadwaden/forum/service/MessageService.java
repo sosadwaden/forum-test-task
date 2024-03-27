@@ -1,5 +1,6 @@
 package com.sosadwaden.forum.service;
 
+import com.sosadwaden.forum.api.request.MessagePUTRequest;
 import com.sosadwaden.forum.api.request.MessageRequest;
 import com.sosadwaden.forum.api.response.MessageResponse;
 import com.sosadwaden.forum.entity.Message;
@@ -11,13 +12,11 @@ import java.util.Optional;
 // TODO пересмотреть т.к. при получении сообщений нужно знать ещё и топик
 public interface MessageService {
 
-    Optional<MessageResponse> findById(Long id);
+    List<MessageResponse> findMessages(Long topicId);
 
-    List<MessageResponse> findAll();
+    void createMessage(Long topicId, MessageRequest messageRequest);
 
-    Long create(MessageRequest messageRequest);
+    MessageResponse updateMessage(Long topicId, Long messageId, MessagePUTRequest messageRequest);
 
-    Optional<MessageResponse> update(Long id, MessageRequest messageRequest);
-
-    void deleteById(Long id);
+    void deleteMessage(Long messageId);
 }
