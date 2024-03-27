@@ -12,7 +12,7 @@ public interface TopicService {
 
     List<TopicResponse> findAll();
 
-    Optional<List<MessageResponse>> findMessages(Long id);
+    List<MessageResponse> findMessages(Long id);
 
     Long create(TopicRequest topicRequest);
 

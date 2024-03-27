@@ -1,15 +1,13 @@
-package com.sosadwaden.forum.api.request;
+package com.sosadwaden.forum.api.response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TopicRequest {
-
-    String topicName;
+public class ErrorResponse {
+    final String message;
 }

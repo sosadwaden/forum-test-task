@@ -5,8 +5,11 @@ import com.sosadwaden.forum.api.response.MessageResponse;
 import com.sosadwaden.forum.api.response.TopicResponse;
 import com.sosadwaden.forum.service.TopicService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +27,14 @@ public class TopicController {
     }
 
     @GetMapping("/{topicId}")
-    public ResponseEntity<Optional<List<MessageResponse>>> findMessages(@PathVariable Long topicId) {
+    public ResponseEntity<List<MessageResponse>> findMessages(@PathVariable Long topicId) {
         return ResponseEntity.ok().body(topicService.findMessages(topicId));
     }
 
-
-
-//    @PostMapping
-//    public ResponseEntity<Long> create(@RequestBody TopicRequest topicRequest) {
-//        Long id = topicService.create(topicRequest);
-//    }
+    @PostMapping
+    public ResponseEntity<String> create(@RequestBody TopicRequest topicRequest) {
+        Long id = topicService.create(topicRequest);
+        return new ResponseEntity<>("Topic with id = " + id + " was created", HttpStatus.CREATED);
+    }
 
 }

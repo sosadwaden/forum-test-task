@@ -15,7 +15,7 @@ public class MessageResponse {
 
     String nickname;
 
-    String text;
+    String messageText;
 
-    LocalDate date;
+    String date;
 }

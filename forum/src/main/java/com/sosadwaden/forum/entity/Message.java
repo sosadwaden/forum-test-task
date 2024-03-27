@@ -3,6 +3,8 @@ package com.sosadwaden.forum.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -11,7 +13,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
+@Entity(name = "Message")
 @Table(name = "message")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Message {
@@ -26,6 +28,8 @@ public class Message {
 
     LocalDate date;
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "topic_id")
+    //@OnDelete(action = OnDeleteAction.CASCADE)
     Topic topic;
 }

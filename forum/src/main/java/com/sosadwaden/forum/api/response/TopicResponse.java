@@ -12,6 +12,7 @@ import java.util.List;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TopicResponse {
-    String name;
-//    List<MessageResponse> messages;
+
+    String topicName;
+    List<MessageResponse> messages;
 }

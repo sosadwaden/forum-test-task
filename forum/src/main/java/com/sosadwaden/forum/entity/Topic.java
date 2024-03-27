@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -11,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
+@Entity(name = "Topic")
 @Table(name = "topic")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Topic {
@@ -20,9 +21,15 @@ public class Topic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(unique = true)
+    @Column(name = "name", unique = true)
     String name;
 
-    @OneToMany
-    List<Message> messages;
+    @Builder.Default
+    @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Message> messages = new ArrayList<>();
+
+    public void addMessage(Message message) {
+        messages.add(message);
+        message.setTopic(this);
+    }
 }
