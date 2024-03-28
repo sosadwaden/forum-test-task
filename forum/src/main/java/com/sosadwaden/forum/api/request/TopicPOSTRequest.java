@@ -11,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class MessagePUTRequest {
+public class TopicPOSTRequest {
 
-    @NotNull(message = "The message must contain at least 1 character")
-    @Size(min = 1, max = 2000, message = "The message must contain at least 1 character and no more than 2000 characters")
-    String text;
+    @NotNull(message = "The topic name cannot be empty")
+    @Size(min = 3, max = 50, message = "The topic name should be between 3 and 50 characters long")
+    String topicName;
 }

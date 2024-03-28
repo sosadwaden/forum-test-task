@@ -3,8 +3,6 @@ package com.sosadwaden.forum.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
 
@@ -30,6 +28,5 @@ public class Message {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
-    //@OnDelete(action = OnDeleteAction.CASCADE)
     Topic topic;
 }
