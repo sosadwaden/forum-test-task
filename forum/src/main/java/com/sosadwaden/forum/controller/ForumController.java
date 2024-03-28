@@ -3,6 +3,7 @@ package com.sosadwaden.forum.controller;
 import com.sosadwaden.forum.api.request.MessagePUTRequest;
 import com.sosadwaden.forum.api.request.MessagePOSTRequest;
 import com.sosadwaden.forum.api.request.TopicPOSTRequest;
+import com.sosadwaden.forum.api.request.TopicPUTRequest;
 import com.sosadwaden.forum.api.response.MessageResponse;
 import com.sosadwaden.forum.api.response.TopicResponse;
 import com.sosadwaden.forum.service.MessageService;
@@ -37,27 +38,39 @@ public class ForumController {
     }
 
     @PostMapping("${application.endpoint.topic}")
-    public ResponseEntity<String> create(@Valid @RequestBody TopicPOSTRequest topicPOSTRequest) {
+    public ResponseEntity<String> createTopic(@Valid @RequestBody TopicPOSTRequest topicPOSTRequest) {
         Long id = topicService.createTopic(topicPOSTRequest);
-        return new ResponseEntity<>("Topic with id = " + id + " was created", HttpStatus.CREATED);
+        return new ResponseEntity<>(String.format("Topic with id = %s was created", id), HttpStatus.CREATED);
     }
 
     @PostMapping("${application.endpoint.topic}/{topicId}")
-    public ResponseEntity<String> createMessage(@PathVariable Long topicId, @Valid @RequestBody MessagePOSTRequest messagePOSTRequest) {
+    public ResponseEntity<String> createMessage(@Min(0) @PathVariable Long topicId, @Valid @RequestBody MessagePOSTRequest messagePOSTRequest) {
         messageService.createMessage(topicId, messagePOSTRequest);
         return new ResponseEntity<>("Message created", HttpStatus.CREATED);
     }
 
+    @PutMapping("${application.endpoint.topic}/{topicId}")
+    public ResponseEntity<TopicResponse> updateTopic(@Min(0) @PathVariable Long topicId, @Valid @RequestBody TopicPUTRequest topicPUTRequest) {
+        TopicResponse topicResponse = topicService.updateTopic(topicId, topicPUTRequest);
+        return new ResponseEntity<>(topicResponse, HttpStatus.OK);
+    }
+
     @PutMapping("${application.endpoint.topic}/{topicId}/{messageId}")
-    public ResponseEntity<MessageResponse> updateMessage(@PathVariable Long topicId, @PathVariable Long messageId, @Valid @RequestBody MessagePUTRequest messagePUTRequest) {
+    public ResponseEntity<MessageResponse> updateMessage(@Min(0) @PathVariable Long topicId, @PathVariable Long messageId, @Valid @RequestBody MessagePUTRequest messagePUTRequest) {
         MessageResponse messageResponse = messageService.updateMessage(topicId, messageId, messagePUTRequest);
         return new ResponseEntity<>(messageResponse, HttpStatus.OK);
     }
 
+    @DeleteMapping("${application.endpoint.topic}/{topicId}")
+    public ResponseEntity<String> deleteTopic(@Min(0) @PathVariable Long topicId) {
+        topicService.deleteTopic(topicId);
+        return new ResponseEntity<>(String.format("Topic with id = %s deleted successfully", topicId), HttpStatus.OK);
+    }
+
     @DeleteMapping("${application.endpoint.message}/{messageId}")
-    public ResponseEntity<String> deleteMessage(@PathVariable Long messageId) {
+    public ResponseEntity<String> deleteMessage(@Min(0) @PathVariable Long messageId) {
         messageService.deleteMessage(messageId);
-        return new ResponseEntity<>("Message deleted successfully", HttpStatus.OK);
+        return new ResponseEntity<>(String.format("Message with id = %s deleted successfully", messageId), HttpStatus.OK);
     }
 
 }

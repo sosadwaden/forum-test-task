@@ -38,9 +38,11 @@ public class MessageServiceImpl implements MessageService {
                     .map(this::convertToMessageResponse)
                     .collect(Collectors.toList());
 
-        } throw TopicNotFoundException.builder()
-                .message(String.format("There is no topic with id: %s", topicId))
-                .build();
+        } else{
+            throw TopicNotFoundException.builder()
+                    .message(String.format("There is no topic with id: %s", topicId))
+                    .build();
+        }
     }
 
     @Override
@@ -82,6 +84,7 @@ public class MessageServiceImpl implements MessageService {
                 Message message = messages.get(Math.toIntExact(messageId) - 1);
                 message.setText(String.format("%s. Сообщение было отредактировано в этот день: $s", messagePUTRequest.getText(), LocalDate.now()));
                 topicRepository.save(topic);
+
                 return convertToMessageResponse(message);
 
             } throw MessageNotFoundException.builder()
