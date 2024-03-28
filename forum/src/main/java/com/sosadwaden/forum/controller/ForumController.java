@@ -30,14 +30,14 @@ public class ForumController {
 
     @GetMapping("${application.endpoint.topic}")
     public ResponseEntity<List<TopicResponse>> findAll(@RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
-                                                       @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit) {
+                                                       @RequestParam(value = "limit", defaultValue = "1") @Min(1) @Max(100) Integer limit) {
         return ResponseEntity.ok().body(topicService.findAll(offset, limit));
     }
 
     @GetMapping("${application.endpoint.topic}/{topicId}")
     public ResponseEntity<List<MessageResponse>> findMessages(@Min(0) @PathVariable Long topicId,
                                                               @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
-                                                              @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit) {
+                                                              @RequestParam(value = "limit", defaultValue = "1") @Min(1) @Max(100) Integer limit) {
         return ResponseEntity.ok().body(messageService.findMessages(topicId, offset, limit));
     }
 
@@ -47,6 +47,7 @@ public class ForumController {
         return new ResponseEntity<>(String.format("Topic with id = %s was created", id), HttpStatus.CREATED);
     }
 
+    // TODO при создании топика если ввести неправильное имя то ничего не происходит, поэтому необходимо обработать исключение и вернуть ответ
     @PostMapping("${application.endpoint.topic}/{topicId}")
     public ResponseEntity<String> createMessage(@Min(0) @PathVariable Long topicId, @Valid @RequestBody MessagePOSTRequest messagePOSTRequest) {
         messageService.createMessage(topicId, messagePOSTRequest);

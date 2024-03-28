@@ -2,7 +2,6 @@ package com.sosadwaden.forum.initialization;
 
 import com.sosadwaden.forum.entity.Message;
 import com.sosadwaden.forum.entity.Topic;
-import com.sosadwaden.forum.repository.MessageRepository;
 import com.sosadwaden.forum.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 
 @Repository
 @RequiredArgsConstructor
-public class InMemoryDBInitializer implements ApplicationRunner {
+public class H2DBInitializer implements ApplicationRunner {
 
     private final TopicRepository topicRepository;
 

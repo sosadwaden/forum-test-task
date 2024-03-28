@@ -13,6 +13,7 @@ import com.sosadwaden.forum.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -41,7 +42,7 @@ public class TopicServiceImpl implements TopicService {
     public Long createTopic(TopicPOSTRequest topicPOSTRequest) {
 
         Message defaultMessage = Message.builder()
-                .nickname("Admin")
+                .nickname(SecurityContextHolder.getContext().getAuthentication().getName())
                 .text("Первое сообщение от админа в топике")
                 .date(LocalDate.now())
                 .build();

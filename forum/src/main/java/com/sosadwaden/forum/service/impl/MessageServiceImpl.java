@@ -7,16 +7,21 @@ import com.sosadwaden.forum.entity.Message;
 import com.sosadwaden.forum.entity.Topic;
 import com.sosadwaden.forum.exception.MessageNotFoundException;
 import com.sosadwaden.forum.exception.TopicNotFoundException;
+import com.sosadwaden.forum.exception.UserNotAuthenticated;
 import com.sosadwaden.forum.repository.MessageRepository;
 import com.sosadwaden.forum.repository.TopicRepository;
 import com.sosadwaden.forum.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +60,7 @@ public class MessageServiceImpl implements MessageService {
         if (optionalTopic.isPresent()) {
 
             Message message = Message.builder()
-                    .nickname(messagePOSTRequest.getNickname())
+                    .nickname(SecurityContextHolder.getContext().getAuthentication().getName())
                     .text(messagePOSTRequest.getText())
                     .date(LocalDate.now())
                     .build();
@@ -120,5 +125,23 @@ public class MessageServiceImpl implements MessageService {
 
     private MessageResponse convertToMessageResponse(Message message) {
         return modelMapper.map(message, MessageResponse.class);
+    }
+
+    private boolean hasAdminRole() {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Set<String> userRoles = new HashSet<>();
+
+        if (authentication != null) {
+            authentication.getAuthorities().forEach(authority -> {
+                userRoles.add(authority.getAuthority());
+            });
+        } else {
+            throw UserNotAuthenticated.builder()
+                    .message("User is not authenticated")
+                    .build();
+        }
+
+        return userRoles.contains("admin");
     }
 }
