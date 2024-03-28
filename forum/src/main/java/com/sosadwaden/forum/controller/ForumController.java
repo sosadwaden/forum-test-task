@@ -9,6 +9,7 @@ import com.sosadwaden.forum.api.response.TopicResponse;
 import com.sosadwaden.forum.service.MessageService;
 import com.sosadwaden.forum.service.TopicService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,13 +29,16 @@ public class ForumController {
     private final MessageService messageService;
 
     @GetMapping("${application.endpoint.topic}")
-    public ResponseEntity<List<TopicResponse>> findAll() {
-        return ResponseEntity.ok().body(topicService.findAll());
+    public ResponseEntity<List<TopicResponse>> findAll(@RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
+                                                       @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit) {
+        return ResponseEntity.ok().body(topicService.findAll(offset, limit));
     }
 
     @GetMapping("${application.endpoint.topic}/{topicId}")
-    public ResponseEntity<List<MessageResponse>> findMessages(@Min(0) @PathVariable Long topicId) {
-        return ResponseEntity.ok().body(messageService.findMessages(topicId));
+    public ResponseEntity<List<MessageResponse>> findMessages(@Min(0) @PathVariable Long topicId,
+                                                              @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
+                                                              @RequestParam(value = "limit", defaultValue = "20") @Min(1) @Max(100) Integer limit) {
+        return ResponseEntity.ok().body(messageService.findMessages(topicId, offset, limit));
     }
 
     @PostMapping("${application.endpoint.topic}")

@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TopicService {
 
-    List<TopicResponse> findAll();
+    List<TopicResponse> findAll(Integer offset, Integer limit);
 
     Long createTopic(TopicPOSTRequest topicPOSTRequest);
 

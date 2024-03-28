@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MessageService {
 
-    List<MessageResponse> findMessages(Long topicId);
+    List<MessageResponse> findMessages(Long topicId, Integer offset, Integer limit);
 
     void createMessage(Long topicId, MessagePOSTRequest messagePOSTRequest);
 

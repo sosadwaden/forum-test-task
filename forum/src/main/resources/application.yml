@@ -15,11 +15,6 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
-#    hibernate:
-#      ddl-auto: #none disable hibernate schema generation
-#  sql:
-#    init:
-#      mode: never #disable script-based schema generation
 
 server:
   port: 7070

@@ -28,13 +28,16 @@ public class MessageServiceImpl implements MessageService {
     private final ModelMapper modelMapper;
 
     @Override
-    public List<MessageResponse> findMessages(Long topicId) {
+    public List<MessageResponse> findMessages(Long topicId, Integer offset, Integer limit) {
 
         Optional<Topic> topicEntity = topicRepository.findById(topicId);
 
         if (topicEntity.isPresent()) {
+
             List<Message> messagesInTopic = topicEntity.get().getMessages();
-            return messagesInTopic.stream()
+            List<Message> subListMessages = messagesInTopic.subList(offset, limit);
+
+            return subListMessages.stream()
                     .map(this::convertToMessageResponse)
                     .collect(Collectors.toList());
 
@@ -82,7 +85,7 @@ public class MessageServiceImpl implements MessageService {
 
                 Topic topic = optionalTopic.get();
                 Message message = messages.get(Math.toIntExact(messageId) - 1);
-                message.setText(String.format("%s. Сообщение было отредактировано в этот день: $s", messagePUTRequest.getText(), LocalDate.now()));
+                message.setText(String.format("%s. Сообщение было отредактировано в этот день: %s", messagePUTRequest.getText(), LocalDate.now()));
                 topicRepository.save(topic);
 
                 return convertToMessageResponse(message);

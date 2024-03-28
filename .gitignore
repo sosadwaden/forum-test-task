@@ -38,3 +38,4 @@ build/
 .DS_Store
 /forum/src/main/resources/ technical_specification
 /forum/src/main/resources/api_example.yaml
+/forum/src/main/resources/technical_specification.txt

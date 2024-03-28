@@ -12,6 +12,7 @@ import com.sosadwaden.forum.repository.TopicRepository;
 import com.sosadwaden.forum.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -24,13 +25,12 @@ import java.util.stream.Collectors;
 public class TopicServiceImpl implements TopicService {
 
     private final TopicRepository topicRepository;
-    private final MessageRepository messageRepository;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<TopicResponse> findAll() {
+    public List<TopicResponse> findAll(Integer offset, Integer limit) {
 
-        List<Topic> topicsEntity = topicRepository.findAll();
+        List<Topic> topicsEntity = topicRepository.findAll(PageRequest.of(offset, limit)).getContent();
 
         return topicsEntity.stream()
                 .map(this::convertToTopicResponse)
