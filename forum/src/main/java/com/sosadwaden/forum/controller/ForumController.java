@@ -37,7 +37,7 @@ public class ForumController {
     @GetMapping("${application.endpoint.topic}/{topicId}")
     public ResponseEntity<List<MessageResponse>> findMessages(@Min(0) @PathVariable Long topicId,
                                                               @RequestParam(value = "offset", defaultValue = "0") @Min(0) Integer offset,
-                                                              @RequestParam(value = "limit", defaultValue = "1") @Min(1) @Max(100) Integer limit) {
+                                                              @RequestParam(value = "limit", defaultValue = "3") @Min(0) @Max(100) Integer limit) {
         return ResponseEntity.ok().body(messageService.findMessages(topicId, offset, limit));
     }
 

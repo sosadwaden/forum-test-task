@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Entity
+@Entity(name = "User")
 @Table(name = "_user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User implements UserDetails {

@@ -6,10 +6,11 @@ import com.sosadwaden.forum.api.response.TopicResponse;
 import com.sosadwaden.forum.entity.Message;
 import com.sosadwaden.forum.entity.Topic;
 import com.sosadwaden.forum.exception.MessageNotFoundException;
+import com.sosadwaden.forum.exception.NoUserPermissionsException;
 import com.sosadwaden.forum.exception.TopicNotFoundException;
-import com.sosadwaden.forum.repository.MessageRepository;
 import com.sosadwaden.forum.repository.TopicRepository;
 import com.sosadwaden.forum.service.TopicService;
+import com.sosadwaden.forum.util.CheckRole;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
@@ -43,7 +44,7 @@ public class TopicServiceImpl implements TopicService {
 
         Message defaultMessage = Message.builder()
                 .nickname(SecurityContextHolder.getContext().getAuthentication().getName())
-                .text("Первое сообщение от админа в топике")
+                .text("The first message from the admin in the topic")
                 .date(LocalDate.now())
                 .build();
 
@@ -58,6 +59,12 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public TopicResponse updateTopic(Long topicId, TopicPUTRequest topicPUTRequest) {
+
+        if (!CheckRole.hasAdminRole()) {
+            throw NoUserPermissionsException.builder()
+                    .message("User does not have the right to edit the topic")
+                    .build();
+        }
 
         Optional<Topic> optionalTopic = topicRepository.findById(topicId);
 
@@ -78,6 +85,13 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void deleteTopic(Long topicId) {
+
+        if (!CheckRole.hasAdminRole()) {
+            throw NoUserPermissionsException.builder()
+                    .message("User does not have the right to delete the topic")
+                    .build();
+        }
+
         Optional<Topic> optionalTopic = topicRepository.findById(topicId);
 
         if (optionalTopic.isPresent()) {

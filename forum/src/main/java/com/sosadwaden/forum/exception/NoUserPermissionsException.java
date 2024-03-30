@@ -8,6 +8,6 @@ import lombok.experimental.FieldDefaults;
 @RequiredArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserNotAuthenticated extends RuntimeException {
+public class NoUserPermissionsException extends RuntimeException {
     final String message;
 }

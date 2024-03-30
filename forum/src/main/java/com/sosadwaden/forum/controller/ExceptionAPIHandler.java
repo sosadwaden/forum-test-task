@@ -2,7 +2,9 @@ package com.sosadwaden.forum.controller;
 
 import com.sosadwaden.forum.api.response.ErrorResponse;
 import com.sosadwaden.forum.exception.MessageNotFoundException;
+import com.sosadwaden.forum.exception.NoUserPermissionsException;
 import com.sosadwaden.forum.exception.TopicNotFoundException;
+import com.sosadwaden.forum.exception.UserNotAuthenticatedException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -65,6 +67,26 @@ public class ExceptionAPIHandler {
                 .build();
 
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotAuthenticatedException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException exception) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .code(HttpStatus.UNAUTHORIZED.value())
+                .build();
+
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NoUserPermissionsException.class)
+    public ResponseEntity<ErrorResponse> handleNoUserPermissions(NoUserPermissionsException exception) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .code(HttpStatus.FORBIDDEN.value())
+                .build();
+
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.FORBIDDEN);
     }
 
 }
