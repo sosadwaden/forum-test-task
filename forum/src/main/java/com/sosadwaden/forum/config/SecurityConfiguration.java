@@ -20,7 +20,6 @@ public class SecurityConfiguration {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final AuthenticationProvider authenticationProvider;
-    //private String[] WHITE_LIST_URL = {"/api/v1/auth/**", "http://localhost:7070/h2-console/"};
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

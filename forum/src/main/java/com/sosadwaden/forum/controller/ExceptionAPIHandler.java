@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 public class ExceptionAPIHandler {
 
     @ExceptionHandler(TopicNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(TopicNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleTopicNotFoundException(TopicNotFoundException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .code(HttpStatus.NOT_FOUND.value())
@@ -31,7 +32,7 @@ public class ExceptionAPIHandler {
     }
 
     @ExceptionHandler(MessageNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleException(MessageNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> handleMessageNotFoundException(MessageNotFoundException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .code(HttpStatus.NOT_FOUND.value())
@@ -41,7 +42,7 @@ public class ExceptionAPIHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException exception) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         Stream<String> fieldErrors = exception.getFieldErrors().stream()
                 .map(e -> String.format("%s: %s", e.getField(), e.getDefaultMessage()));
 
@@ -60,7 +61,7 @@ public class ExceptionAPIHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorResponse> handleValidationPathVariables(ConstraintViolationException exception) {
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .code(HttpStatus.BAD_REQUEST.value())
@@ -70,7 +71,7 @@ public class ExceptionAPIHandler {
     }
 
     @ExceptionHandler(UserNotAuthenticatedException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotAuthenticated(UserNotAuthenticatedException exception) {
+    public ResponseEntity<ErrorResponse> handleUserNotAuthenticatedException(UserNotAuthenticatedException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .code(HttpStatus.UNAUTHORIZED.value())
@@ -80,13 +81,23 @@ public class ExceptionAPIHandler {
     }
 
     @ExceptionHandler(NoUserPermissionsException.class)
-    public ResponseEntity<ErrorResponse> handleNoUserPermissions(NoUserPermissionsException exception) {
+    public ResponseEntity<ErrorResponse> handleNoUserPermissionsException(NoUserPermissionsException exception) {
         ErrorResponse response = ErrorResponse.builder()
                 .message(exception.getMessage())
                 .code(HttpStatus.FORBIDDEN.value())
                 .build();
 
         return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponse> handleBadCredentialsException(BadCredentialsException exception) {
+        ErrorResponse response = ErrorResponse.builder()
+                .message(exception.getMessage())
+                .code(HttpStatus.UNAUTHORIZED.value())
+                .build();
+
+        return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
 }

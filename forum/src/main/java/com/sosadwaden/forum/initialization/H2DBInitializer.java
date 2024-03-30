@@ -8,13 +8,10 @@ import com.sosadwaden.forum.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,6 +23,7 @@ public class H2DBInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
+        //------------------------------ Users create and save ------------------------------
         User user = User.builder()
                 .username("user")
                 .password(new BCryptPasswordEncoder().encode("12345678"))
@@ -38,6 +36,10 @@ public class H2DBInitializer implements ApplicationRunner {
                 .role("admin")
                 .build();
 
+        userRepository.save(user);
+        userRepository.save(admin);
+
+        //------------------------------ Messages create ------------------------------
         Message message1 = Message.builder()
                 .id(1L)
                 .text("Привет из темы про телефоны, сообщение 1")
@@ -101,6 +103,8 @@ public class H2DBInitializer implements ApplicationRunner {
                 .nickname("Автор3")
                 .build();
 
+        // ------------------------------ Topics create and save ------------------------------
+
         Topic topic1 = Topic.builder()
                 .id(1L)
                 .name("Телефоны")
@@ -131,9 +135,6 @@ public class H2DBInitializer implements ApplicationRunner {
         topicRepository.save(topic1);
         topicRepository.save(topic2);
         topicRepository.save(topic3);
-
-        userRepository.save(user);
-        userRepository.save(admin);
 
     }
 }

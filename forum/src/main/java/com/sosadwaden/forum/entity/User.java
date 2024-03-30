@@ -1,8 +1,6 @@
 package com.sosadwaden.forum.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.security.core.GrantedAuthority;
@@ -56,11 +54,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-//    @NotNull(message = "User must have the user or admin role")
-//    String role;
-//
-//    boolean isActive;
-//    String roles;
 
 }

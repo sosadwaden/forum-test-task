@@ -11,7 +11,6 @@ import com.sosadwaden.forum.exception.TopicNotFoundException;
 import com.sosadwaden.forum.exception.UserNotAuthenticatedException;
 import com.sosadwaden.forum.repository.MessageRepository;
 import com.sosadwaden.forum.repository.TopicRepository;
-import com.sosadwaden.forum.repository.UserRepository;
 import com.sosadwaden.forum.service.MessageService;
 import com.sosadwaden.forum.util.CheckRole;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +29,6 @@ public class MessageServiceImpl implements MessageService {
 
     private final TopicRepository topicRepository;
     private final MessageRepository messageRepository;
-    private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Override
@@ -78,23 +76,12 @@ public class MessageServiceImpl implements MessageService {
         }
     }
 
-    // TODO Ужасно работает метод, что то не так с проверками аутентификации
     @Override
     public MessageResponse updateMessage(Long topicId, Long messageId, MessagePUTRequest messagePUTRequest) {
 
         if (!CheckRole.hasAdminRole() && !CheckRole.hasUserRole()) {
             throw UserNotAuthenticatedException.builder()
                     .message("User is not authenticated")
-                    .build();
-        }
-
-        String messageAuthor = topicRepository.findMessagesInTopicById(topicId)
-                                       .get(topicRepository.findMessageById(messageId))
-                                       .getNickname();
-
-        if (!messageAuthor.equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
-            throw NoUserPermissionsException.builder()
-                    .message(String.format("User with nickname %s does not have access to edit this message", messageAuthor))
                     .build();
         }
 
@@ -108,6 +95,14 @@ public class MessageServiceImpl implements MessageService {
 
                 Topic topic = optionalTopic.get();
                 Message message = messages.get(Math.toIntExact(messageId) - 1);
+                String messageAuthor = message.getNickname();
+
+                if (!messageAuthor.equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+                    throw NoUserPermissionsException.builder()
+                            .message(String.format("User with nickname %s does not have access to edit this message", messageAuthor))
+                            .build();
+                }
+
                 message.setText(String.format("%s. Сообщение было отредактировано в этот день: %s", messagePUTRequest.getText(), LocalDate.now()));
                 topicRepository.save(topic);
 

@@ -7,6 +7,7 @@ import com.sosadwaden.forum.entity.User;
 import com.sosadwaden.forum.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class AuthenticationService {
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole()) // TODO сделать проверку на роль
+                .role(request.getRole())
                 .build();
 
         userRepository.save(user);
@@ -45,7 +46,7 @@ public class AuthenticationService {
         );
 
         var user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow(); // TODO создать новое исключение и перехватить
+                .orElseThrow(() -> new BadCredentialsException("The user with this username was not found"));
 
         var jwtToken = jwtService.generateToken(user);
 
